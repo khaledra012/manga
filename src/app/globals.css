@@ -1,0 +1,388 @@
+/* ============================================================
+   🎨 MANGA TEACH — Design System
+   ============================================================
+   عايز تغير الألوان؟ غير القيم هنا في :root بس!
+   كل الموقع هيتغير تلقائياً.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ============================================================
+   🔥 COLOR TOKENS — غيّر من هنا
+   ============================================================ */
+:root {
+  /* --- Accent (اللون الرئيسي / التمييز) --- */
+  --accent:           #e8460a;      /* اللون الأساسي البرتقالي الناري */
+  --accent-hover:     #ff5a1f;      /* عند الـ hover */
+  --accent-muted:     #7a2405;      /* نسخة داكنة للـ backgrounds */
+  --accent-glow:      rgba(232, 70, 10, 0.35);  /* توهج للـ shadows */
+
+  /* --- Backgrounds --- */
+  --bg-base:          #0b0b0f;      /* خلفية الصفحة الرئيسية */
+  --bg-surface:       #131318;      /* كروت وبانلات */
+  --bg-elevated:      #1c1c24;      /* عناصر مرفوعة (modals, dropdowns) */
+  --bg-overlay:       rgba(11, 11, 15, 0.85); /* overlays شفافة */
+
+  /* --- Text --- */
+  --text-primary:     #f0f0f5;      /* النص الأساسي */
+  --text-secondary:   #9090a8;      /* النص الثانوي */
+  --text-muted:       #5a5a70;      /* نص خافت */
+  --text-on-accent:   #ffffff;      /* نص فوق الـ accent */
+
+  /* --- Borders --- */
+  --border-subtle:    rgba(255, 255, 255, 0.06);  /* حدود خفيفة */
+  --border-default:   rgba(255, 255, 255, 0.10);  /* حدود عادية */
+  --border-accent:    rgba(232, 70, 10, 0.40);    /* حدود accent */
+
+  /* --- Status Colors --- */
+  --status-ongoing:   #22c55e;      /* أخضر - مستمر */
+  --status-completed: #3b82f6;      /* أزرق - مكتمل */
+  --status-hiatus:    #f59e0b;      /* أصفر - متوقف مؤقتاً */
+  --status-cancelled: #6b7280;      /* رمادي - ملغي */
+
+  /* --- Gradients --- */
+  --gradient-accent:  linear-gradient(135deg, #e8460a 0%, #ff6b35 100%);
+  --gradient-dark:    linear-gradient(180deg, rgba(11,11,15,0) 0%, rgba(11,11,15,0.95) 100%);
+  --gradient-card:    linear-gradient(180deg, transparent 40%, rgba(11,11,15,0.97) 100%);
+  --gradient-hero:    linear-gradient(135deg, #0b0b0f 0%, #1a0a05 50%, #0b0b0f 100%);
+
+  /* --- Shadows --- */
+  --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md:   0 4px 20px rgba(0, 0, 0, 0.5);
+  --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.6);
+  --shadow-accent: 0 4px 24px var(--accent-glow);
+
+  /* --- Spacing Scale --- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* --- Border Radius --- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* --- Typography Scale --- */
+  --font-arabic: 'Noto Sans Arabic', 'Segoe UI', sans-serif;
+  --font-latin:  'Inter', 'Segoe UI', sans-serif;
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+  --text-5xl:  3rem;
+
+  /* --- Transitions --- */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* --- Z-Index --- */
+  --z-base:    1;
+  --z-card:    10;
+  --z-sticky:  100;
+  --z-overlay: 200;
+  --z-modal:   300;
+  --z-toast:   400;
+}
+
+/* ============================================================
+   🌍 GLOBAL RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  direction: rtl;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-arabic);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* استخدام الخط اللاتيني للنصوص الانجليزية */
+:lang(en), .latin {
+  font-family: var(--font-latin);
+}
+
+/* ============================================================
+   🔗 LINKS & FOCUS
+   ============================================================ */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+   🖼️ IMAGES
+   ============================================================ */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ============================================================
+   📜 SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ============================================================
+   🎭 UTILITY CLASSES
+   ============================================================ */
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-inline: var(--space-4);
+  }
+}
+
+/* Flex helpers */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+
+/* Text helpers */
+.text-muted { color: var(--text-secondary); }
+.text-accent { color: var(--accent); }
+.text-sm { font-size: var(--text-sm); }
+.text-xs { font-size: var(--text-xs); }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   🃏 CARD BASE
+   ============================================================ */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-default);
+}
+
+/* ============================================================
+   🔲 BUTTON BASE
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-family: var(--font-arabic);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn-accent {
+  background: var(--gradient-accent);
+  color: var(--text-on-accent);
+  box-shadow: var(--shadow-accent);
+}
+
+.btn-accent:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 30px var(--accent-glow);
+  color: var(--text-on-accent);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+/* ============================================================
+   🏷️ BADGE BASE
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   ✨ ANIMATIONS
+   ============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px var(--accent-glow); }
+  50%       { box-shadow: 0 0 20px var(--accent-glow); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface) 25%,
+    var(--bg-elevated) 50%,
+    var(--bg-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+  border-radius: var(--radius-md);
+}
+
+/* ============================================================
+   📱 RESPONSIVE GRID
+   ============================================================ */
+.manga-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .manga-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .manga-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-6);
+  }
+}
+
+/* ============================================================
+   🌟 SECTION HEADINGS
+   ============================================================ */
+.section-title {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.section-title::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 1.4em;
+  background: var(--gradient-accent);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   📄 PAGE TRANSITIONS
+   ============================================================ */
+main {
+  animation: fadeIn 0.35s ease;
+}

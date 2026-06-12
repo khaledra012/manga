@@ -1,0 +1,36 @@
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: {
+    default: "MANGATK — اقرأ المانجا مجاناً",
+    template: "%s | MANGATK",
+  },
+  description: "موقع MANGATK لقراءة المانجا والمانهوا والمانهوا الصيني مجاناً بجودة عالية",
+  keywords: ["مانجا", "مانهوا", "قراءة مانجا", "manga", "manhwa", "manhua", "mangatk"],
+  openGraph: {
+    type: "website",
+    locale: "ar_EG",
+    siteName: "MANGATK",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="ar" dir="rtl">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body>
+        <div id="app-wrapper">
+          {children}
+        </div>
+      </body>
+    </html>
+  );
+}

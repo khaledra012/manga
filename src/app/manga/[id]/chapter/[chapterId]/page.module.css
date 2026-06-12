@@ -1,0 +1,232 @@
+.readerPage {
+  background: #000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.readingArea {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: #000;
+}
+
+.pagesContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  padding: 0;
+  margin: 0 auto;
+}
+
+.pageImageWrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 1px;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+}
+
+/* Shimmer loading effect */
+.pageImageWrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.03) 50%,
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  z-index: 1;
+}
+
+.pageImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 2;
+  user-select: none;
+  vertical-align: bottom;
+}
+
+.pageIndicator {
+  position: absolute;
+  bottom: var(--space-3);
+  right: var(--space-3);
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  backdrop-filter: blur(4px);
+}
+
+.pageImageWrapper:hover .pageIndicator {
+  opacity: 1;
+}
+
+/* نهاية الفصل */
+.endChapterSection {
+  background: var(--bg-base);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: var(--space-16) 0;
+  text-align: center;
+}
+
+.endChapterCard {
+  max-width: 600px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  padding: var(--space-10) var(--space-6);
+  backdrop-filter: blur(8px);
+}
+
+.endChapterCard h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-bottom: var(--space-2);
+}
+
+.chTitle {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: var(--space-8);
+}
+
+.endActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.endActions a {
+  width: 100%;
+  max-width: 320px;
+  padding: var(--space-3) var(--space-8);
+  font-size: 1rem;
+}
+
+.lastChapterNote {
+  background: rgba(232, 70, 10, 0.05);
+  border: 1px dashed rgba(232, 70, 10, 0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-6);
+  color: var(--text-light);
+  font-size: 0.95rem;
+  max-width: 420px;
+  line-height: 1.6;
+}
+
+/* شاشات الخطأ */
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg-base);
+  padding: var(--space-6);
+}
+
+.errorCard {
+  text-align: center;
+  max-width: 450px;
+  background: var(--bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-xl);
+  padding: var(--space-10) var(--space-6);
+  box-shadow: var(--shadow-lg);
+}
+
+.errorIcon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: var(--space-4);
+}
+
+.errorCard h2 {
+  color: var(--text-light);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.errorCard p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-8);
+  line-height: 1.6;
+}
+
+.errorActions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+.errorActions a {
+  padding: var(--space-2) var(--space-6);
+  font-size: 0.95rem;
+}
+
+.noPagesCard {
+  text-align: center;
+  padding: var(--space-20) var(--space-6);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* موبايل — تملأ الشاشة بالكامل */
+@media (max-width: 768px) {
+  .pagesContainer {
+    max-width: 100%;
+  }
+
+  .pageImageWrapper {
+    min-height: 300px;
+    margin-bottom: 0;
+  }
+
+  .endChapterSection {
+    padding: var(--space-10) var(--space-4);
+  }
+
+  .endChapterCard {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .endChapterCard h3 {
+    font-size: 1.25rem;
+  }
+}
+
+/* شاشات كبيرة */
+@media (min-width: 1400px) {
+  .pagesContainer {
+    max-width: 1100px;
+  }
+}

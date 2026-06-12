@@ -1,0 +1,18 @@
+.section {
+  padding: var(--space-16) 0;
+  background: linear-gradient(180deg, transparent, rgba(232, 70, 10, 0.03), transparent);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+  gap: var(--space-4);
+}
+
+.viewAllBtn {
+  flex-shrink: 0;
+  font-size: var(--text-xs) !important;
+  padding: var(--space-2) var(--space-4) !important;
+}
