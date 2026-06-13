@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     locale: "ar_EG",
     siteName: "MANGATK",
   },
+  verification: {
+  google: "QGrIkK3aQQBZiPuNNE7blPPwFxgtMNuItLD7Qm34W9Y", 
+  },
 };
 
 export default function RootLayout({
