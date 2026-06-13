@@ -3,7 +3,7 @@ import { getMangaList, getMangaBySlug, parseChapterNumber } from '@/lib/api';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // استخدام رابط الموقع الفعلي أو الافتراضي
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mangatk.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mangatk-gilt.vercel.app';
 
   // 1. الصفحات الثابتة (Static Routes)
   const staticRoutes = [

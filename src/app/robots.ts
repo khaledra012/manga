@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
   // استخدام رابط الموقع الفعلي أو الافتراضي
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mangatk.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mangatk-gilt.vercel.app';
 
   return {
     rules: {
