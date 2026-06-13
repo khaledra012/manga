@@ -73,12 +73,11 @@ export async function getMangaBySlug(slug: string): Promise<ApiResponse<MangaDet
 }
 
 /**
- * GET /api/manga/:id — نفس الدالة محتفظين بيها كـ alias للأدمن
- * @deprecated استخدم getMangaBySlug للصفحات العامة
+ * GET /api/admin/manga/:id — جلب بيانات مانجا واحدة للأدمن (بالـ UUID)
  */
 export async function getMangaById(id: string): Promise<ApiResponse<MangaDetails>> {
-  const url = buildUrl(`/api/manga/${id}`);
-  return apiFetch<ApiResponse<MangaDetails>>(url);
+  const url = buildUrl(`/api/admin/manga/${id}`);
+  return adminFetch<ApiResponse<MangaDetails>>(url);
 }
 
 /**

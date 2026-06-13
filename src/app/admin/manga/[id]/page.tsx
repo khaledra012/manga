@@ -21,6 +21,7 @@ export default function AdminMangaDetailPage(props: { params: Params }) {
 
   const [manga, setManga] = useState<MangaDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   // Chapter form
   const [chapterNum, setChapterNum] = useState('');
@@ -79,11 +80,23 @@ export default function AdminMangaDetailPage(props: { params: Params }) {
   const coverInputRef = useRef<HTMLInputElement>(null);
 
   async function loadManga() {
+    setLoading(true);
+    setLoadError(null);
     try {
       const res = await getMangaById(mangaId);
       setManga(res.data);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
+      if (e instanceof Error) {
+        // تمييز 404 عن الأخطاء الأخرى
+        if (e.message.includes('404') || e.message.includes('غير موجود') || e.message.includes('not found')) {
+          setLoadError('404');
+        } else {
+          setLoadError(e.message || 'خطأ في الاتصال بالـ API');
+        }
+      } else {
+        setLoadError('خطأ غير متوقع');
+      }
     } finally {
       setLoading(false);
     }
@@ -217,11 +230,34 @@ export default function AdminMangaDetailPage(props: { params: Params }) {
   }
 
   if (!manga) {
+    const isNotFound = loadError === '404';
     return (
       <div className={styles.page}>
         <div className={styles.errorBox}>
-          <p>⚠️ المانجا مش موجودة</p>
-          <Link href="/admin/manga" className="btn btn-accent">رجوع</Link>
+          <p style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>
+            {isNotFound ? '🔍' : '⚠️'}
+          </p>
+          <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>
+            {isNotFound ? 'المانجا مش موجودة في قاعدة البيانات' : 'مشكلة في تحميل المانجا'}
+          </p>
+          {!isNotFound && loadError && (
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem', direction: 'ltr', background: 'rgba(255,100,100,0.1)', padding: '0.5rem', borderRadius: '6px' }}>
+              {loadError}
+            </p>
+          )}
+          {!isNotFound && (
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '1rem' }}>
+              تأكد أن الباك اند شغال وإن NEXT_PUBLIC_API_URL متضبط صح على Vercel
+            </p>
+          )}
+          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+            {!isNotFound && (
+              <button className="btn btn-accent" onClick={loadManga}>
+                🔄 إعادة المحاولة
+              </button>
+            )}
+            <Link href="/admin/manga" className="btn btn-ghost">← رجوع</Link>
+          </div>
         </div>
       </div>
     );
