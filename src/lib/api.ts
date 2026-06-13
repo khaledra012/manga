@@ -77,8 +77,8 @@ export async function getMangaBySlug(slug: string): Promise<ApiResponse<MangaDet
  * @deprecated استخدم getMangaBySlug للصفحات العامة
  */
 export async function getMangaById(id: string): Promise<ApiResponse<MangaDetails>> {
-  const url = buildUrl(`/api/manga/${id}`);
-  return apiFetch<ApiResponse<MangaDetails>>(url);
+ const url = buildUrl(`/api/admin/manga/${id}`);
+  return adminFetch<ApiResponse<MangaDetails>>(url);
 }
 
 /**
