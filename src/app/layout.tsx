@@ -25,6 +25,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <script src="https://quge5.com/88/tag.min.js" data-zone="249286" async data-cfasync="false"></script>
       </head>
       <body>
         <div id="app-wrapper">
