@@ -12,7 +12,7 @@ interface Props {
 
 export default function MangaCard({ manga, priority = false }: Props) {
   return (
-    <Link href={`/manga/${manga.id}`} className={styles.card} aria-label={manga.title}>
+    <Link href={`/manga/${manga.slug}`} className={styles.card} aria-label={manga.title}>
       {/* Cover Image */}
       <div className={styles.coverWrapper}>
         <Image

@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // إصلاح Turbopack root warning
+  turbopack: {
+    root: __dirname,
+  },
+
   images: {
     remotePatterns: [
       // Supabase (Production)
@@ -18,7 +23,6 @@ const nextConfig: NextConfig = {
       },
     ],
     // ✅ تعطيل Image Optimization — يحل مشكلة Private IP (localhost)
-    // عند النشر على الإنتاج مع Supabase، يمكن تغييرها لـ false
     unoptimized: true,
   },
 };

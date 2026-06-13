@@ -26,6 +26,7 @@ export interface ChapterSummary {
   title: string | null;
   views: number;
   created_at: string;
+  // slug الفصل = chapter_number مُعالَج (مثل 1.0 → "1", 1.5 → "1.5")
 }
 
 // --- Chapter Page (صفحة داخل الفصل) ---
@@ -47,9 +48,14 @@ export interface ChapterDetails {
   pages: ChapterPage[];
   manga: {
     id: string;
+    slug: string;          // ← slug المانجا للبناء السليم للروابط
     title: string;
     cover_url: string;
+    chapters: ChapterSummary[];  // ← كل الفصول لبناء قائمة التنقل
   };
+  prev_chapter_number: string | null;   // ← رقم الفصل السابق (بدل ID)
+  next_chapter_number: string | null;   // ← رقم الفصل التالي (بدل ID)
+  // الـ IDs القديمة — محتفظين بيها كـ fallback
   prev_chapter_id: string | null;
   next_chapter_id: string | null;
 }
@@ -58,6 +64,7 @@ export interface ChapterDetails {
 // --- Manga (في القوايم) ---
 export interface MangaListItem {
   id: string;
+  slug: string;           // ← SEO-friendly slug مثل "one-piece"
   title: string;
   title_alt: string | null;
   description: string;
@@ -87,6 +94,7 @@ export interface LatestUpdateItem {
   created_at: string;
   manga: {
     id: string;
+    slug: string;          // ← slug المانجا لبناء الرابط
     title: string;
     cover_url: string;
     type: MangaType;

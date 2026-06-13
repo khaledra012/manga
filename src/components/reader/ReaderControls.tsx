@@ -7,23 +7,26 @@ import { parseChapterNumber } from '@/lib/api';
 import styles from './ReaderControls.module.css';
 
 interface ReaderControlsProps {
-  mangaId: string;
+  mangaSlug: string;
   mangaTitle: string;
   chapters: ChapterSummary[];
-  currentChapterId: string;
   currentChapterNumber: string;
-  prevChapterId: string | null;
-  nextChapterId: string | null;
+  prevChapterNumber: string | null;
+  nextChapterNumber: string | null;
+}
+
+// chapter_number → URL segment (1.0 → "1", 1.5 → "1.5")
+function numToSlug(num: string): string {
+  return String(parseChapterNumber(num));
 }
 
 export default function ReaderControls({
-  mangaId,
+  mangaSlug,
   mangaTitle,
   chapters,
-  currentChapterId,
   currentChapterNumber,
-  prevChapterId,
-  nextChapterId,
+  prevChapterNumber,
+  nextChapterNumber,
 }: ReaderControlsProps) {
   const router = useRouter();
 
@@ -33,16 +36,16 @@ export default function ReaderControls({
   );
 
   const handleChapterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const targetId = e.target.value;
-    if (targetId && targetId !== currentChapterId) {
-      router.push(`/manga/${mangaId}/chapter/${targetId}`);
+    const targetNum = e.target.value;
+    if (targetNum && targetNum !== currentChapterNumber) {
+      router.push(`/manga/${mangaSlug}/chapter/${numToSlug(targetNum)}`);
     }
   };
 
   return (
     <div className={styles.controlsWrapper}>
       {/* زر العودة للمانجا */}
-      <Link href={`/manga/${mangaId}`} className={styles.backLink}>
+      <Link href={`/manga/${mangaSlug}`} className={styles.backLink}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
           <path d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
@@ -51,9 +54,13 @@ export default function ReaderControls({
 
       {/* أدوات التنقل */}
       <div className={styles.navigation}>
-        {/* زر الفصل السابق (في الترتيب التصاعدي يعني الرقم الأصغر) */}
-        {prevChapterId ? (
-          <Link href={`/manga/${mangaId}/chapter/${prevChapterId}`} className={styles.navBtn} title="الفصل السابق">
+        {/* زر الفصل السابق */}
+        {prevChapterNumber ? (
+          <Link
+            href={`/manga/${mangaSlug}/chapter/${numToSlug(prevChapterNumber)}`}
+            className={styles.navBtn}
+            title="الفصل السابق"
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="m15 18-6-6 6-6" />
             </svg>
@@ -71,12 +78,12 @@ export default function ReaderControls({
         {/* القائمة المنسدلة للفصول */}
         <div className={styles.selectWrapper}>
           <select
-            value={currentChapterId}
+            value={currentChapterNumber}
             onChange={handleChapterChange}
             className={styles.chapterSelect}
           >
             {sortedChapters.map((ch) => (
-              <option key={ch.id} value={ch.id}>
+              <option key={ch.id} value={ch.chapter_number}>
                 الفصل {parseChapterNumber(ch.chapter_number)}
                 {ch.title ? ` - ${ch.title}` : ''}
               </option>
@@ -89,9 +96,13 @@ export default function ReaderControls({
           </div>
         </div>
 
-        {/* زر الفصل التالي (في الترتيب التصاعدي يعني الرقم الأكبر) */}
-        {nextChapterId ? (
-          <Link href={`/manga/${mangaId}/chapter/${nextChapterId}`} className={styles.navBtn} title="الفصل التالي">
+        {/* زر الفصل التالي */}
+        {nextChapterNumber ? (
+          <Link
+            href={`/manga/${mangaSlug}/chapter/${numToSlug(nextChapterNumber)}`}
+            className={styles.navBtn}
+            title="الفصل التالي"
+          >
             <span className={styles.btnText}>التالي</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="m9 18 6-6-6-6" />

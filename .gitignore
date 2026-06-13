@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# OneDrive — هذه المجلدات يتم استعادتها تلقائياً بواسطة OneDrive ولا ينبغي نشرها
+# الـ routes الحقيقية موجودة في [id] و [chapterId]
+src/app/manga/\[slug\]/
+src/app/manga/\[slug\]/**

@@ -2,35 +2,42 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import StatusBadge from '@/components/manga/StatusBadge';
-import { getMangaById, formatViews, formatDate, parseChapterNumber } from '@/lib/api';
+import { getMangaBySlug, formatViews, formatDate, parseChapterNumber } from '@/lib/api';
 import styles from './page.module.css';
 
+// الـ [id] parameter يقبل slug أو UUID — الباك اند يتعامل مع الاتنين
 type Params = Promise<{ id: string }>;
 
 // توليد الـ metadata لصفحة تفاصيل المانجا ديناميكياً
 export async function generateMetadata(props: { params: Params }) {
   const params = await props.params;
   try {
-    const response = await getMangaById(params.id);
+    const response = await getMangaBySlug(params.id);
     const manga = response.data;
     return {
-      title: `${manga.title} — تفاصيل المانجا`,
+      title: `${manga.title} — تفاصيل المانجا | MANGATK`,
       description: manga.description.substring(0, 160),
+      openGraph: {
+        title: `${manga.title} | MANGATK`,
+        description: manga.description.substring(0, 160),
+        images: [{ url: manga.cover_url }],
+      },
     };
   } catch {
     return {
-      title: 'تفاصيل المانجا',
+      title: 'تفاصيل المانجا | MANGATK',
     };
   }
 }
 
 export default async function MangaDetailPage(props: { params: Params }) {
   const params = await props.params;
-  const { id } = params;
+  // الـ id قد يكون slug (مثل "one-piece") أو UUID — الباك اند يقبل الاتنين
+  const { id: slugOrId } = params;
 
   let manga;
   try {
-    const response = await getMangaById(id);
+    const response = await getMangaBySlug(slugOrId);
     manga = response.data;
   } catch (error) {
     console.error('Error loading manga details:', error);
@@ -55,6 +62,12 @@ export default async function MangaDetailPage(props: { params: Params }) {
   const sortedChapters = [...manga.chapters].sort((a, b) =>
     parseFloat(a.chapter_number) - parseFloat(b.chapter_number)
   );
+
+  // helper: chapter_number → URL segment (1.0 → "1", 1.5 → "1.5")
+  const chapterNumToSlug = (num: string) => String(parseChapterNumber(num));
+
+  // استخدام الـ slug الحقيقي من الـ API response لبناء الروابط الصحيحة
+  const mangaSlug = manga.slug;
 
   return (
     <>
@@ -99,7 +112,10 @@ export default async function MangaDetailPage(props: { params: Params }) {
               {/* أزرار سريعة */}
               <div className={styles.sidebarActions}>
                 {sortedChapters.length > 0 ? (
-                  <Link href={`/manga/${manga.id}/chapter/${sortedChapters[0].id}`} className="btn btn-accent">
+                  <Link
+                    href={`/manga/${mangaSlug}/chapter/${chapterNumToSlug(sortedChapters[0].chapter_number)}`}
+                    className="btn btn-accent"
+                  >
                     بدء القراءة (فصل {parseChapterNumber(sortedChapters[0].chapter_number)})
                   </Link>
                 ) : (
@@ -175,7 +191,7 @@ export default async function MangaDetailPage(props: { params: Params }) {
                     {manga.chapters.map((chapter) => (
                       <div
                         key={chapter.id}
-                        id={`chapter-${chapter.id}`}
+                        id={`chapter-${parseChapterNumber(chapter.chapter_number)}`}
                         className={styles.chapterRow}
                       >
                         <div className={styles.chapterInfo}>
@@ -197,9 +213,9 @@ export default async function MangaDetailPage(props: { params: Params }) {
                           </span>
                           <span className={styles.chapterDate}>{formatDate(chapter.created_at)}</span>
 
-                          {/* زر القراءة */}
+                          {/* زر القراءة — رابط SEO نظيف */}
                           <Link
-                            href={`/manga/${manga.id}/chapter/${chapter.id}`}
+                            href={`/manga/${mangaSlug}/chapter/${chapterNumToSlug(chapter.chapter_number)}`}
                             className={`btn btn-ghost ${styles.readBtn}`}
                           >
                             اقرأ الآن

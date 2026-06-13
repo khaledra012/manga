@@ -1,22 +1,27 @@
 import Link from 'next/link';
-import { getChapterById, getMangaById, parseChapterNumber } from '@/lib/api';
+import { getChapterBySlugAndNumber, getMangaBySlug, parseChapterNumber } from '@/lib/api';
 import ReaderControls from '@/components/reader/ReaderControls';
 import ChapterViewTracker from '@/components/reader/ChapterViewTracker';
 import styles from './page.module.css';
 
+// الـ [id] يقبل slug أو UUID للمانجا، والـ [chapterId] يقبل chapter_number أو UUID
 type Params = Promise<{ id: string; chapterId: string }>;
 
 // توليد الميتاداتا ديناميكياً لصفحة قارئ المانجا
 export async function generateMetadata(props: { params: Params }) {
   const params = await props.params;
   try {
-    const response = await getChapterById(params.chapterId);
+    const response = await getChapterBySlugAndNumber(params.id, params.chapterId);
     const chapter = response.data;
     return {
       title: `${chapter.manga.title} — الفصل ${parseChapterNumber(chapter.chapter_number)} — MANGATK`,
       description: `اقرأ الفصل ${parseChapterNumber(chapter.chapter_number)} ${
         chapter.title ? `(${chapter.title})` : ''
       } من مانجا ${chapter.manga.title} بالكامل ومترجم على MANGATK.`,
+      openGraph: {
+        title: `${chapter.manga.title} — الفصل ${parseChapterNumber(chapter.chapter_number)} | MANGATK`,
+        images: [{ url: chapter.manga.cover_url }],
+      },
     };
   } catch {
     return {
@@ -27,20 +32,24 @@ export async function generateMetadata(props: { params: Params }) {
 
 export default async function ChapterReaderPage(props: { params: Params }) {
   const params = await props.params;
-  const { id: mangaId, chapterId } = params;
+  // [id] = manga slug أو UUID  |  [chapterId] = chapter_number أو UUID
+  const { id: mangaSlugOrId, chapterId: chapterNumOrId } = params;
 
   let chapter;
-  let manga;
+  let mangaChapters;
+  let mangaSlug: string;
 
   try {
-    // جلب بيانات الفصل ومانجا التفاصيل بالتوازي لملء الـ Dropdown
+    // جلب بيانات الفصل ومانجا التفاصيل بالتوازي
     const [chapterResponse, mangaResponse] = await Promise.all([
-      getChapterById(chapterId),
-      getMangaById(mangaId),
+      getChapterBySlugAndNumber(mangaSlugOrId, chapterNumOrId),
+      getMangaBySlug(mangaSlugOrId),
     ]);
 
     chapter = chapterResponse.data;
-    manga = mangaResponse.data;
+    mangaChapters = mangaResponse.data.chapters;
+    // استخدام الـ slug الحقيقي من الـ API response لبناء الروابط الصحيحة
+    mangaSlug = chapter.manga.slug || mangaResponse.data.slug || mangaSlugOrId;
   } catch (error) {
     console.error('Error loading chapter reader:', error);
     return (
@@ -50,7 +59,7 @@ export default async function ChapterReaderPage(props: { params: Params }) {
           <h2>حصل مشكلة أثناء تحميل الفصل</h2>
           <p>اتأكد من اتصالك بالإنترنت أو حاول تفتح الفصل مرة تانية.</p>
           <div className={styles.errorActions}>
-            <Link href={`/manga/${mangaId}`} className="btn btn-accent">
+            <Link href={`/manga/${mangaSlugOrId}`} className="btn btn-accent">
               العودة للمانجا
             </Link>
             <Link href="/" className="btn btn-ghost">
@@ -62,23 +71,29 @@ export default async function ChapterReaderPage(props: { params: Params }) {
     );
   }
 
-  // ترتيب الصفحات تصاعدياً بحسب page_number للتأكد من تسلسل القراءة
+  // helper: chapter_number → URL segment (1.0 → "1", 1.5 → "1.5")
+  const numToSlug = (num: string) => String(parseChapterNumber(num));
+
+  // الفصل السابق والتالي بالرقم (من الـ API الجديد)
+  const prevNum = chapter.prev_chapter_number ?? null;
+  const nextNum = chapter.next_chapter_number ?? null;
+
+  // ترتيب الصفحات تصاعدياً بحسب page_number
   const sortedPages = [...chapter.pages].sort((a, b) => a.page_number - b.page_number);
 
   return (
     <div className={styles.readerPage} style={{ direction: 'rtl' }}>
-      {/* تتبع المشاهدة مع session_id — يعمل من جانب العميل فقط */}
-      <ChapterViewTracker chapterId={chapterId} />
+      {/* تتبع المشاهدة — يعمل بالـ UUID الحقيقي للفصل */}
+      <ChapterViewTracker chapterId={chapter.id} />
 
       {/* شريط التحكم والتنقل */}
       <ReaderControls
-        mangaId={mangaId}
-        mangaTitle={manga?.title || chapter.manga.title}
-        chapters={manga?.chapters || []}
-        currentChapterId={chapterId}
+        mangaSlug={mangaSlug}
+        mangaTitle={chapter.manga.title}
+        chapters={mangaChapters ?? chapter.manga.chapters ?? []}
         currentChapterNumber={chapter.chapter_number}
-        prevChapterId={chapter.prev_chapter_id}
-        nextChapterId={chapter.next_chapter_id}
+        prevChapterNumber={prevNum}
+        nextChapterNumber={nextNum}
       />
 
       {/* منطقة عرض الصفحات */}
@@ -110,11 +125,14 @@ export default async function ChapterReaderPage(props: { params: Params }) {
       <section className={styles.endChapterSection}>
         <div className={`container ${styles.endChapterCard}`}>
           <h3>لقد أنهيت الفصل {parseChapterNumber(chapter.chapter_number)} 🎉</h3>
-          {chapter.title && <p className={styles.chTitle}>"{chapter.title}"</p>}
+          {chapter.title && <p className={styles.chTitle}>&quot;{chapter.title}&quot;</p>}
 
           <div className={styles.endActions}>
-            {chapter.next_chapter_id ? (
-              <Link href={`/manga/${mangaId}/chapter/${chapter.next_chapter_id}`} className="btn btn-accent">
+            {nextNum ? (
+              <Link
+                href={`/manga/${mangaSlug}/chapter/${numToSlug(nextNum)}`}
+                className="btn btn-accent"
+              >
                 الفصل التالي 🚀
               </Link>
             ) : (
@@ -122,7 +140,7 @@ export default async function ChapterReaderPage(props: { params: Params }) {
                 <p>لقد وصلت لآخر فصل متوفر حالياً لهذه المانجا. سيتم إضافة الفصول الجديدة فور صدورها!</p>
               </div>
             )}
-            <Link href={`/manga/${mangaId}`} className="btn btn-ghost">
+            <Link href={`/manga/${mangaSlug}`} className="btn btn-ghost">
               الرجوع لتفاصيل المانجا
             </Link>
           </div>

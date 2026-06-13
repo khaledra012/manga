@@ -65,7 +65,16 @@ export async function getMangaList(params?: MangaQueryParams): Promise<ApiListRe
 }
 
 /**
- * GET /api/manga/:id — تفاصيل مانجا + فصولها
+ * GET /api/manga/:slug — تفاصيل مانجا + فصولها (عن طريق slug)
+ */
+export async function getMangaBySlug(slug: string): Promise<ApiResponse<MangaDetails>> {
+  const url = buildUrl(`/api/manga/${slug}`);
+  return apiFetch<ApiResponse<MangaDetails>>(url);
+}
+
+/**
+ * GET /api/manga/:id — نفس الدالة محتفظين بيها كـ alias للأدمن
+ * @deprecated استخدم getMangaBySlug للصفحات العامة
  */
 export async function getMangaById(id: string): Promise<ApiResponse<MangaDetails>> {
   const url = buildUrl(`/api/manga/${id}`);
@@ -102,8 +111,24 @@ export function getOrCreateSessionId(): string {
 }
 
 /**
- * GET /api/chapters/:id — صفحات وقراءة فصل معين
+ * GET /api/chapters/:mangaSlug/:chapterNumber — صفحات وقراءة فصل معين (SEO URLs)
+ * @param mangaSlug - slug المانجا مثل "one-piece"
+ * @param chapterNumber - رقم الفصل مثل "1" أو "1.5"
  * @param sessionId - اختياري: لو موجود يُرسل مع الطلب لمنع تكرار عد المشاهدات
+ */
+export async function getChapterBySlugAndNumber(
+  mangaSlug: string,
+  chapterNumber: string,
+  sessionId?: string
+): Promise<ApiResponse<ChapterDetails>> {
+  const params = sessionId ? { session_id: sessionId } : undefined;
+  const url = buildUrl(`/api/chapters/${mangaSlug}/${chapterNumber}`, params);
+  return apiFetch<ApiResponse<ChapterDetails>>(url);
+}
+
+/**
+ * GET /api/chapters/:id — محتفظين بيها كـ fallback للأدمن
+ * @deprecated استخدم getChapterBySlugAndNumber للصفحات العامة
  */
 export async function getChapterById(
   id: string,

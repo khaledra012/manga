@@ -21,7 +21,7 @@ export default function LatestUpdates({ updates }: Props) {
           {updates.map((item, i) => (
             <Link
               key={item.id}
-              href={`/manga/${item.manga.id}`}
+              href={`/manga/${item.manga.slug}`}
               className={styles.card}
               style={{ animationDelay: `${i * 30}ms` }}
             >
