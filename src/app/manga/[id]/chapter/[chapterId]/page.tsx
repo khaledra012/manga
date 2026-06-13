@@ -13,14 +13,14 @@ export async function generateMetadata(props: { params: Params }) {
     const response = await getChapterById(params.chapterId);
     const chapter = response.data;
     return {
-      title: `${chapter.manga.title} — الفصل ${parseChapterNumber(chapter.chapter_number)} — MangaTeach`,
+      title: `${chapter.manga.title} — الفصل ${parseChapterNumber(chapter.chapter_number)} — MANGATK`,
       description: `اقرأ الفصل ${parseChapterNumber(chapter.chapter_number)} ${
         chapter.title ? `(${chapter.title})` : ''
-      } من مانجا ${chapter.manga.title} بالكامل ومترجم على مانجا تيتش.`,
+      } من مانجا ${chapter.manga.title} بالكامل ومترجم على MANGATK.`,
     };
   } catch {
     return {
-      title: 'قارئ المانجا — MangaTeach',
+      title: 'قارئ المانجا — MANGATK',
     };
   }
 }

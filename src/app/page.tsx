@@ -113,7 +113,7 @@ export default async function HomePage() {
           <div className={`container ${styles.footerInner}`}>
             <div className={styles.footerLogo}>
               <span>⚡</span>
-              <span className={styles.footerLogoText}>Manga<span style={{ color: 'var(--accent)' }}>Teach</span></span>
+              <span className={styles.footerLogoText}>MANGA<span style={{ color: 'var(--accent)' }}>TK</span></span>
             </div>
             <p className={styles.footerText}>
               جميع حقوق المانجا محفوظة لأصحابها الأصليين
