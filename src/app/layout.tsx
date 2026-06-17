@@ -3,15 +3,15 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "MANGATK — اقرأ المانجا مجاناً",
-    template: "%s | MANGATK",
+    default: "MANGATAK — اقرأ المانجا مجاناً",
+    template: "%s | MANGATAK",
   },
-  description: "موقع MANGATK لقراءة المانجا والمانهوا والمانهوا الصيني مجاناً بجودة عالية",
-  keywords: ["مانجا", "مانهوا", "قراءة مانجا", "manga", "manhwa", "manhua", "mangatk"],
+  description: "موقع MANGATAK لقراءة المانجا والمانهوا والمانهوا الصيني مجاناً بجودة عالية",
+  keywords: ["مانجا", "مانهوا", "قراءة مانجا", "manga", "manhwa", "manhua", "mangatak"],
   openGraph: {
     type: "website",
     locale: "ar_EG",
-    siteName: "MANGATK",
+    siteName: "MANGATAK",
   },
   verification: {
   google: "QGrIkK3aQQBZiPuNNE7blPPwFxgtMNuItLD7Qm34W9Y", 

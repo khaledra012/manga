@@ -27,7 +27,7 @@ export default function AdminSidebar() {
       <div className={styles.logo}>
         <Image
           src="/logo.png"
-          alt="MANGATK"
+          alt="MANGATAK"
           width={110}
           height={37}
           className={styles.logoImg}

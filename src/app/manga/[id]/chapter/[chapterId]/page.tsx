@@ -14,18 +14,18 @@ export async function generateMetadata(props: { params: Params }) {
     const response = await getChapterBySlugAndNumber(params.id, params.chapterId);
     const chapter = response.data;
     return {
-      title: `${chapter.manga.title} — الفصل ${parseChapterNumber(chapter.chapter_number)} — MANGATK`,
+      title: `${chapter.manga.title} — الفصل ${parseChapterNumber(chapter.chapter_number)} — MANGATAK`,
       description: `اقرأ الفصل ${parseChapterNumber(chapter.chapter_number)} ${
         chapter.title ? `(${chapter.title})` : ''
-      } من مانجا ${chapter.manga.title} بالكامل ومترجم على MANGATK.`,
+      } من مانجا ${chapter.manga.title} بالكامل ومترجم على MANGATAK.`,
       openGraph: {
-        title: `${chapter.manga.title} — الفصل ${parseChapterNumber(chapter.chapter_number)} | MANGATK`,
+        title: `${chapter.manga.title} — الفصل ${parseChapterNumber(chapter.chapter_number)} | MANGATAK`,
         images: [{ url: chapter.manga.cover_url }],
       },
     };
   } catch {
     return {
-      title: 'قارئ المانجا — MANGATK',
+      title: 'قارئ المانجا — MANGATAK',
     };
   }
 }

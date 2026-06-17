@@ -46,7 +46,7 @@ export default function Navbar() {
         <Link href="/" className={styles.logo}>
           <Image
             src="/logo.png"
-            alt="MANGATK"
+            alt="MANGATAK"
             width={130}
             height={44}
             className={styles.logoImg}

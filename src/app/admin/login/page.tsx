@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
         <div className={styles.logo}>
           <Image
             src="/logo.png"
-            alt="MANGATK"
+            alt="MANGATAK"
             width={150}
             height={50}
             className={styles.logoImg}

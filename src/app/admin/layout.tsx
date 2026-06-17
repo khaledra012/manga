@@ -3,8 +3,8 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 import styles from './layout.module.css';
 
 export const metadata: Metadata = {
-  title: 'لوحة التحكم — MANGATK Admin',
-  description: 'لوحة تحكم إدارة موقع MANGATK',
+  title: 'لوحة التحكم — MANGATAK Admin',
+  description: 'لوحة تحكم إدارة موقع MANGATAK',
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

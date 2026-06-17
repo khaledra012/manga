@@ -15,17 +15,17 @@ export async function generateMetadata(props: { params: Params }) {
     const response = await getMangaBySlug(params.id);
     const manga = response.data;
     return {
-      title: `${manga.title} — تفاصيل المانجا | MANGATK`,
+      title: `${manga.title} — تفاصيل المانجا | MANGATAK`,
       description: manga.description.substring(0, 160),
       openGraph: {
-        title: `${manga.title} | MANGATK`,
+        title: `${manga.title} | MANGATAK`,
         description: manga.description.substring(0, 160),
         images: [{ url: manga.cover_url }],
       },
     };
   } catch {
     return {
-      title: 'تفاصيل المانجا | MANGATK',
+      title: 'تفاصيل المانجا | MANGATAK',
     };
   }
 }
