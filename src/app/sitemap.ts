@@ -42,9 +42,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    // 2. جلب قائمة المانجا (بحد أقصى 500 مانجا لسرعة التوليد وتجنب الـ timeout)
-    const mangaResponse = await getMangaList({ limit: 500 });
-    const mangas = mangaResponse.data || [];
+    // جلب المانجا على دفعات (صفحات) لتجنب قيود الباك اند (الحد الأقصى للـ limit هو 100)
+    const mangas: any[] = [];
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore && page <= 5) {
+      const res = await getMangaList({ limit: 100, page });
+      if (res && res.data && res.data.length > 0) {
+        mangas.push(...res.data);
+        hasMore = res.data.length === 100;
+        page++;
+      } else {
+        hasMore = false;
+      }
+    }
 
     const mangaRoutes: MetadataRoute.Sitemap = [];
     const chapterRoutes: MetadataRoute.Sitemap = [];
