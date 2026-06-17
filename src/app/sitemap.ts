@@ -6,7 +6,7 @@ export const revalidate = 0;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // استخدام رابط الموقع الفعلي أو الافتراضي
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mangatk-gilt.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.mangatak.online';
 
   // 1. الصفحات الثابتة (Static Routes)
   const staticRoutes = [
@@ -28,17 +28,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     },
-  ];
-
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'not-set';
-
-  const debugRoutes = [
-    {
-      url: `${baseUrl}/debug-api-url-${encodeURIComponent(apiUrl)}`,
-      lastModified: new Date(),
-      changeFrequency: 'always' as const,
-      priority: 0.1,
-    }
   ];
 
   try {
@@ -97,18 +86,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     }
 
-    return [...staticRoutes, ...debugRoutes, ...mangaRoutes, ...chapterRoutes];
+    return [...staticRoutes, ...mangaRoutes, ...chapterRoutes];
   } catch (error: any) {
     console.error('[Sitemap] Failed to generate dynamic routes:', error);
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    const errorRoutes = [
-      {
-        url: `${baseUrl}/debug-error-${encodeURIComponent(errorMsg)}`,
-        lastModified: new Date(),
-        changeFrequency: 'always' as const,
-        priority: 0.1,
-      }
-    ];
-    return [...staticRoutes, ...debugRoutes, ...errorRoutes];
+    return staticRoutes;
   }
 }
