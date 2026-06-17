@@ -30,6 +30,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'not-set';
+
+  const debugRoutes = [
+    {
+      url: `${baseUrl}/debug-api-url-${encodeURIComponent(apiUrl)}`,
+      lastModified: new Date(),
+      changeFrequency: 'always' as const,
+      priority: 0.1,
+    }
+  ];
+
   try {
     // 2. جلب قائمة المانجا (بحد أقصى 500 مانجا لسرعة التوليد وتجنب الـ timeout)
     const mangaResponse = await getMangaList({ limit: 500 });
@@ -74,9 +85,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     }
 
-    return [...staticRoutes, ...mangaRoutes, ...chapterRoutes];
-  } catch (error) {
+    return [...staticRoutes, ...debugRoutes, ...mangaRoutes, ...chapterRoutes];
+  } catch (error: any) {
     console.error('[Sitemap] Failed to generate dynamic routes:', error);
-    return staticRoutes;
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    const errorRoutes = [
+      {
+        url: `${baseUrl}/debug-error-${encodeURIComponent(errorMsg)}`,
+        lastModified: new Date(),
+        changeFrequency: 'always' as const,
+        priority: 0.1,
+      }
+    ];
+    return [...staticRoutes, ...debugRoutes, ...errorRoutes];
   }
 }
