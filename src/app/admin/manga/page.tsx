@@ -34,6 +34,8 @@ function MangaFormModal({ genres, editTarget, onClose, onSaved }: MangaFormProps
   );
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState(editTarget?.cover_url ?? '');
+  const [metaTitle, setMetaTitle] = useState(editTarget?.meta_title ?? '');
+  const [metaDescription, setMetaDescription] = useState(editTarget?.meta_description ?? '');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -97,6 +99,8 @@ function MangaFormModal({ genres, editTarget, onClose, onSaved }: MangaFormProps
           artist: artist.trim() || undefined,
           release_year: year ? Number(year) : undefined,
           genres: selectedGenres.join(',') || undefined,
+          meta_title: metaTitle.trim() || null,
+          meta_description: metaDescription.trim() || null,
         });
       } else {
         // إضافة — multipart
@@ -111,6 +115,8 @@ function MangaFormModal({ genres, editTarget, onClose, onSaved }: MangaFormProps
         if (year) fd.append('release_year', year);
         if (selectedGenres.length > 0) fd.append('genres', selectedGenres.join(','));
         if (coverFile) fd.append('cover', coverFile);
+        if (metaTitle.trim()) fd.append('meta_title', metaTitle.trim());
+        if (metaDescription.trim()) fd.append('meta_description', metaDescription.trim());
         await createManga(fd);
       }
       onSaved();
@@ -230,6 +236,24 @@ function MangaFormModal({ genres, editTarget, onClose, onSaved }: MangaFormProps
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* إعدادات محركات البحث (SEO) */}
+            <div className={mangaStyles.fieldFull} style={{ marginTop: 'var(--space-2)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
+                <span style={{ fontSize: '1.2rem' }}>🔍</span>
+                <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-light)' }}>إعدادات محركات البحث (SEO)</h4>
+              </div>
+            </div>
+
+            <div className={mangaStyles.fieldFull}>
+              <label>عنوان SEO المخصص (Meta Title)</label>
+              <input value={metaTitle} onChange={e => setMetaTitle(e.target.value)} placeholder="عنوان الصفحة المخصص لمحركات البحث (اختياري)" className={styles.searchInput} maxLength={255} />
+            </div>
+
+            <div className={mangaStyles.fieldFull}>
+              <label>وصف SEO المخصص (Meta Description)</label>
+              <textarea value={metaDescription} onChange={e => setMetaDescription(e.target.value)} placeholder="وصف الصفحة المخصص لمحركات البحث (اختياري - حتى 500 حرف)" className={mangaStyles.textarea} rows={2} maxLength={500} />
             </div>
           </div>
 

@@ -91,6 +91,9 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* ====== Popular Manga ====== */}
+        {popular.length > 0 && <PopularSection manga={popular} />}
+
         {/* ====== Latest Updates ====== */}
         <div id="latest">
           {latest.length > 0 ? (
@@ -102,9 +105,6 @@ export default async function HomePage() {
           )}
         </div>
 
-        {/* ====== Popular Manga ====== */}
-        {popular.length > 0 && <PopularSection manga={popular} />}
-
         {/* ====== Genres ====== */}
         {genres.length > 0 && <GenresSection genres={genres} />}
 
@@ -113,7 +113,7 @@ export default async function HomePage() {
           <div className={`container ${styles.footerInner}`}>
             <div className={styles.footerLogo}>
               <span>⚡</span>
-              <span className={styles.footerLogoText}>MANGA<span style={{ color: 'var(--accent)' }}>TK</span></span>
+              <span className={styles.footerLogoText}>MANGA<span style={{ color: 'var(--accent)' }}>TAK</span></span>
             </div>
             <p className={styles.footerText}>
               جميع حقوق المانجا محفوظة لأصحابها الأصليين

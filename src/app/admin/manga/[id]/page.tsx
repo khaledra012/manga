@@ -26,6 +26,8 @@ export default function AdminMangaDetailPage(props: { params: Params }) {
   // Chapter form
   const [chapterNum, setChapterNum] = useState('');
   const [chapterTitle, setChapterTitle] = useState('');
+  const [chapterMetaTitle, setChapterMetaTitle] = useState('');
+  const [chapterMetaDescription, setChapterMetaDescription] = useState('');
   const [editingChapter, setEditingChapter] = useState<ChapterSummary | null>(null);
   const [chapterSubmitting, setChapterSubmitting] = useState(false);
   const [chapterError, setChapterError] = useState('');
@@ -115,14 +117,22 @@ export default function AdminMangaDetailPage(props: { params: Params }) {
         await updateChapter(editingChapter.id, {
           chapter_number: parseFloat(chapterNum),
           title: chapterTitle || undefined,
+          meta_title: chapterMetaTitle.trim() || null,
+          meta_description: chapterMetaDescription.trim() || null,
         });
       } else {
         await createChapter(mangaId, {
           chapter_number: parseFloat(chapterNum),
           title: chapterTitle || undefined,
+          meta_title: chapterMetaTitle.trim() || null,
+          meta_description: chapterMetaDescription.trim() || null,
         });
       }
-      setChapterNum(''); setChapterTitle(''); setEditingChapter(null);
+      setChapterNum('');
+      setChapterTitle('');
+      setChapterMetaTitle('');
+      setChapterMetaDescription('');
+      setEditingChapter(null);
       loadManga();
     } catch (err: unknown) {
       setChapterError(err instanceof Error ? err.message : 'حصل خطأ');
@@ -346,6 +356,48 @@ export default function AdminMangaDetailPage(props: { params: Params }) {
                     className={styles.searchInput}
                   />
                 </div>
+
+                {/* SEO Fields */}
+                <div style={{ gridColumn: '1 / -1', marginTop: 'var(--space-2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
+                    <span style={{ fontSize: '1.1rem' }}>🔍</span>
+                    <h4 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-light)' }}>إعدادات محركات البحث (SEO) للفصل</h4>
+                  </div>
+                </div>
+
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '4px' }}>عنوان SEO المخصص للفصل (Meta Title)</label>
+                  <input
+                    type="text"
+                    value={chapterMetaTitle}
+                    onChange={e => setChapterMetaTitle(e.target.value)}
+                    placeholder="عنوان الصفحة المخصص لمحركات البحث (اختياري)"
+                    className={styles.searchInput}
+                    maxLength={255}
+                  />
+                </div>
+
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '4px' }}>وصف SEO المخصص للفصل (Meta Description)</label>
+                  <textarea
+                    value={chapterMetaDescription}
+                    onChange={e => setChapterMetaDescription(e.target.value)}
+                    placeholder="وصف الصفحة المخصص لمحركات البحث (اختياري - حتى 500 حرف)"
+                    style={{
+                      background: 'var(--bg-surface)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: 'var(--space-2) var(--space-3)',
+                      color: 'var(--text-light)',
+                      fontFamily: 'inherit',
+                      fontSize: '0.85rem',
+                      width: '100%',
+                      resize: 'vertical',
+                    }}
+                    rows={2}
+                    maxLength={500}
+                  />
+                </div>
               </div>
               {chapterError && <p className={detailStyles.fieldError}>{chapterError}</p>}
               <div className={detailStyles.chapterFormActions}>
@@ -353,7 +405,7 @@ export default function AdminMangaDetailPage(props: { params: Params }) {
                   {chapterSubmitting ? 'جاري...' : editingChapter ? 'حفظ التعديل' : 'إضافة الفصل'}
                 </button>
                 {editingChapter && (
-                  <button type="button" className="btn btn-ghost" onClick={() => { setEditingChapter(null); setChapterNum(''); setChapterTitle(''); }}>
+                  <button type="button" className="btn btn-ghost" onClick={() => { setEditingChapter(null); setChapterNum(''); setChapterTitle(''); setChapterMetaTitle(''); setChapterMetaDescription(''); }}>
                     إلغاء
                   </button>
                 )}
@@ -385,7 +437,7 @@ export default function AdminMangaDetailPage(props: { params: Params }) {
                       </button>
                       <button
                         className={styles.iconBtn}
-                        onClick={() => { setEditingChapter(ch); setChapterNum(String(parseChapterNumber(ch.chapter_number))); setChapterTitle(ch.title || ''); }}
+                        onClick={() => { setEditingChapter(ch); setChapterNum(String(parseChapterNumber(ch.chapter_number))); setChapterTitle(ch.title || ''); setChapterMetaTitle(ch.meta_title || ''); setChapterMetaDescription(ch.meta_description || ''); }}
                         title="تعديل"
                       >
                         ✏️

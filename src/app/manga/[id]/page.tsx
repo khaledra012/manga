@@ -14,13 +14,16 @@ export async function generateMetadata(props: { params: Params }) {
   try {
     const response = await getMangaBySlug(params.id);
     const manga = response.data;
+    const title = manga.seo?.title || manga.title;
+    const description = manga.seo?.description || manga.description?.substring(0, 160) || '';
+    
     return {
-      title: `${manga.title} — تفاصيل المانجا | MANGATAK`,
-      description: manga.description.substring(0, 160),
+      title,
+      description,
       openGraph: {
-        title: `${manga.title} | MANGATAK`,
-        description: manga.description.substring(0, 160),
-        images: [{ url: manga.cover_url }],
+        title,
+        description,
+        images: manga.cover_url ? [{ url: manga.cover_url }] : [],
       },
     };
   } catch {

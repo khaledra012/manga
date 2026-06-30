@@ -27,6 +27,8 @@ export interface ChapterSummary {
   views: number;
   created_at: string;
   // slug الفصل = chapter_number مُعالَج (مثل 1.0 → "1", 1.5 → "1.5")
+  meta_title?: string | null;
+  meta_description?: string | null;
 }
 
 // --- Chapter Page (صفحة داخل الفصل) ---
@@ -58,6 +60,12 @@ export interface ChapterDetails {
   // الـ IDs القديمة — محتفظين بيها كـ fallback
   prev_chapter_id: string | null;
   next_chapter_id: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  seo?: {
+    title: string;
+    description: string;
+  };
 }
 
 
@@ -79,6 +87,12 @@ export interface MangaListItem {
   genres: Genre[];
   created_at: string;
   updated_at: string;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  seo?: {
+    title: string;
+    description: string;
+  };
 }
 
 // --- Manga (تفاصيل كاملة) ---
@@ -183,6 +197,8 @@ export interface AdminMangaListItem {
   genres: Genre[];
   created_at: string;
   updated_at: string;
+  meta_title?: string | null;
+  meta_description?: string | null;
 }
 
 // --- بيانات الفصل الإداري ---
@@ -194,6 +210,8 @@ export interface AdminChapterItem {
   views: number;
   created_at: string;
   updated_at?: string;
+  meta_title?: string | null;
+  meta_description?: string | null;
 }
 
 // --- بيانات الصفحة المرفوعة ---
@@ -209,6 +227,8 @@ export interface AdminPageItem {
 export interface CreateChapterData {
   chapter_number: number;
   title?: string;
+  meta_title?: string | null;
+  meta_description?: string | null;
 }
 
 // --- بيانات تعديل مانجا (JSON) ---
@@ -222,5 +242,7 @@ export interface UpdateMangaData {
   artist?: string;
   release_year?: number;
   genres?: string; // IDs مفصولة بفاصلة "1,2,3"
+  meta_title?: string | null;
+  meta_description?: string | null;
 }
 
