@@ -103,6 +103,11 @@ export default async function ChapterReaderPage(props: { params: Params }) {
       {/* منطقة عرض الصفحات */}
       <main className={styles.readingArea}>
         <div className={styles.pagesContainer}>
+          {/* تنويه الفصل الحالي */}
+          <div className={styles.chapterHeaderNotice}>
+            أنت تشاهد <span>الفصل {parseChapterNumber(chapter.chapter_number)}</span> من مانجا <Link href={`/manga/${mangaSlug}`} className={styles.mangaLink}><span>{chapter.manga.title}</span></Link>
+          </div>
+
           {sortedPages.length === 0 ? (
             <div className={styles.noPagesCard}>
               <p>مفيش صفحات مرفوعة للفصل ده لسه.</p>
